@@ -1,0 +1,9 @@
+{% if shoplist_list %}
+    <ul>
+    {% for shoplist in shoplist_list %}
+        <li><a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available</p>
+{% endif %}

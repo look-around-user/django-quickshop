@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'qsh.apps.QshConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

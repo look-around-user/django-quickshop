@@ -7,10 +7,11 @@
 <form action="{% url 'qsh:shoplist_edit' shoplist.id %}" method="post">
 {% csrf_token %}
 {% for buydetail in shoplist.buydetail_set.all %}
-    <input type="checkbox" name="buydetail" id="buydetail{{ forloop.counter }}" value="{{ buydetail.id }}"/>
+    <input type="checkbox" name="buydetails_to_delete" id="buydetail{{ forloop.counter }}" value="{{ buydetail.id }}"/>
     <label for="buydetail{{ forloop.counter }}">{{ buydetail.buyable.name }}</label><br />
 {% endfor %}
 <input type="submit" value="Delete" />
 </form>
 
-<a href="{% url 'qsh:shoplist_add_new' shoplist.id %}">Add new</a>
+<a href="{% url 'qsh:shoplist_add_new'  shoplist.id %}">Add new</a>
+<a href="{% url 'qsh:shoplist_add_many' shoplist.id %}">Add many</a>

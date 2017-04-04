@@ -1,0 +1,19 @@
+<h1>{{ shoplist.name }}</h1>
+
+<h3>{{ selected }}</h3>
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+{% if buyables %}
+<form method="post">
+{% csrf_token %}
+{% for buyable in buyables %}
+    <input type="checkbox" name="buyables_to_add" id="buyable{{ forloop.counter }}" value="{{ buyable.id }}"/>
+    <label for="buyable{{ forloop.counter }}">{{ buyable.name }}</label><br />
+{% endfor %}
+<input type="submit" value="Add selected" />
+</form>
+{% else %}
+    <p>No buyables for some reason!?</p>
+{% endif %}

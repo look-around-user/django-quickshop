@@ -2,13 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Shoplist, Buyable, Buydetail, User
-from .forms import BuydetailForm
+from .forms import BuydetailForm, ShoplistForm
 
-def index(request):
-    return HttpResponse("halo")
-
+@login_required
 def _shoplist_add_buydetail(shoplist, buyable, quantity):
     buydetail = Buydetail()
     buydetail.shoplist = shoplist
@@ -16,6 +16,7 @@ def _shoplist_add_buydetail(shoplist, buyable, quantity):
     buydetail.quantity = quantity
     buydetail.save()
 
+@login_required
 def shoplist_add_new(request, shoplist_id):
 
     shoplist = Shoplist.objects.get(pk=shoplist_id)
@@ -33,7 +34,7 @@ def shoplist_add_new(request, shoplist_id):
             else:
                 buyable = Buyable()
                 buyable.name = buyable_name
-                buyable.user = shoplist.user
+                buyable.user = request.user
                 buyable.save()
 
             _shoplist_add_buydetail(shoplist, buyable, form.cleaned_data['quantity'])
@@ -44,6 +45,7 @@ def shoplist_add_new(request, shoplist_id):
 
     return render(request, 'qsh/shoplist_add_new.html', { 'shoplist': shoplist, 'form': form })
 
+@login_required
 def shoplist_add_many(request, shoplist_id):
 
     shoplist = Shoplist.objects.get(pk=shoplist_id)
@@ -57,7 +59,7 @@ def shoplist_add_many(request, shoplist_id):
 
         return HttpResponseRedirect(reverse('qsh:shoplist_edit', args=(shoplist.id,)))
 
-    buyables_all = Buyable.objects.all()
+    buyables_all = Buyable.objects.filter(user=request.user)
     buydetails_in_shoplist = shoplist.buydetail_set.all()
     buyables = []
     for buyable in buyables_all:
@@ -74,6 +76,7 @@ def shoplist_add_many(request, shoplist_id):
             'buyables': buyables,
             })
 
+@login_required
 def shoplist_edit(request, shoplist_id):
 
     shoplist = Shoplist.objects.get(pk=shoplist_id)
@@ -87,8 +90,41 @@ def shoplist_edit(request, shoplist_id):
 
     return render(request, 'qsh/shoplist_edit.html', { 'shoplist': shoplist })
 
-class ShoplistsView(generic.ListView):
+@login_required
+def shoplist_create(request):
+    if request.method == 'POST':
+        form = ShoplistForm(request.POST)
+        if form.is_valid():
+
+            shoplist_name = form.cleaned_data['name']
+            # TODO error message for same name
+
+            shoplist = Shoplist()
+            shoplist.name = shoplist_name
+            shoplist.user = request.user
+            shoplist.save()
+
+            return HttpResponseRedirect(reverse('qsh:shoplist_edit', args=(shoplist.id,)))
+    form = ShoplistForm()
+
+    return render(request, 'qsh/shoplist_create.html', { 'form': form })
+
+@login_required
+def shoplist_delete(request):
+
+    if request.method == 'POST':
+        shoplists_to_delete = request.POST.getlist('shoplists_to_delete')
+
+        for shoplist_id in shoplists_to_delete:
+            shoplist = Shoplist.objects.filter(pk=shoplist_id)
+            for buydetail in Buydetail.objects.filter(shoplist=shoplist):
+                buydetail.delete()
+            shoplist.delete()
+
+    return HttpResponseRedirect(reverse('qsh:shoplist_list'))
+
+class ShoplistsView(LoginRequiredMixin, generic.ListView):
     model = Shoplist
     def get_queryset(self):
         # TODO filter by user
-        return Shoplist.objects.all()
+        return Shoplist.objects.filter(user=self.request.user)

@@ -1,6 +1,6 @@
 {% extends "qsh/base.html" %}
 
-{% block title %}Add new to {{ shoplist.name }}{% endblock %}
+{% block title %}Create shoplist{% endblock %}
 {% block content %}
 
 {% if error_message %}
@@ -10,7 +10,7 @@
 <form method="post">
 {% csrf_token %}
 {{ form }}
-<input type="submit" value="Add" />
+<input type="submit" value="Create" />
 </form>
 
 {% endblock %}

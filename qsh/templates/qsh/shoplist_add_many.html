@@ -1,4 +1,7 @@
-<h1>{{ shoplist.name }}</h1>
+{% extends "qsh/base.html" %}
+
+{% block title %}Add many to {{ shoplist.name }}{% endblock %}
+{% block content %}
 
 <h3>{{ selected }}</h3>
 {% if error_message %}
@@ -17,3 +20,5 @@
 {% else %}
     <p>No buyables for some reason!?</p>
 {% endif %}
+
+{% endblock %}

@@ -5,6 +5,8 @@ from . import views
 app_name = 'qsh'
 urlpatterns = [
     url(r'^$', views.ShoplistsView.as_view(), name='shoplist_list'),
+    url(r'^create$', views.shoplist_create  , name='shoplist_create'),
+    url(r'^delete$', views.shoplist_delete  , name='shoplist_delete'),
     url(r'^(?P<shoplist_id>[0-9]+)/edit$'   , views.shoplist_edit    , name='shoplist_edit'),
     url(r'^(?P<shoplist_id>[0-9]+)/addNew$' , views.shoplist_add_new , name='shoplist_add_new'),
     url(r'^(?P<shoplist_id>[0-9]+)/addMany$', views.shoplist_add_many, name='shoplist_add_many'),

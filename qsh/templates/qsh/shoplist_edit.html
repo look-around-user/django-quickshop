@@ -1,4 +1,14 @@
-<h1>{{ shoplist.name }}</h1>
+{% extends "qsh/base.html" %}
+
+{% block title %}Edit {{ shoplist.name }}{% endblock %}
+
+{% block header %}
+<a href="{% url 'qsh:shoplist_list' %}">Shoplists</a>
+<br />
+<p />
+{% endblock %}
+
+{% block content %}
 
 {% if error_message %}
 <p><strong>{{ error_message }}</strong></p>
@@ -15,3 +25,5 @@
 
 <a href="{% url 'qsh:shoplist_add_new'  shoplist.id %}">Add new</a>
 <a href="{% url 'qsh:shoplist_add_many' shoplist.id %}">Add many</a>
+
+{% endblock %}

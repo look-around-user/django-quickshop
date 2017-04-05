@@ -1,0 +1,12 @@
+<html>
+<head>
+    <title>{{ request.user.first_name }} --- {% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class=header>
+{% block header %}{% endblock %}
+</div>
+<div class="content">
+{% block content %}{% endblock %}
+</div>
+</body>

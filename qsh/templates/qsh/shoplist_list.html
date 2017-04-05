@@ -1,9 +1,25 @@
+{% extends "qsh/base.html" %}
+
+{% block title %}All shoplists{% endblock %}
+{% block content %}
+
 {% if shoplist_list %}
-    <ul>
-    {% for shoplist in shoplist_list %}
-        <li><a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a></li>
-    {% endfor %}
-    </ul>
+<form action="{% url 'qsh:shoplist_list' %}" method="post">
+{% csrf_token %}
+{% for shoplist in shoplist_list %}
+    <input type="checkbox" name="shoplists_to_delete" id="shoplist{{ forloop.counter }}" value="{{ shoplist.id }}"/>
+    <label for="shoplist{{ forloop.counter }}">
+        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a>
+    </label>
+    <br />
+{% endfor %}
+<input type="submit" value="Delete selected" />
+</form>
 {% else %}
-    <p>No polls are available</p>
+    <p>No shoplists yet</p>
 {% endif %}
+
+<p>
+<a href="{% url 'qsh:shoplist_create' %}">Create new</a></li>
+</p>
+{% endblock %}

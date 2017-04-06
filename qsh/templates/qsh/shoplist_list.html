@@ -4,7 +4,7 @@
 {% block content %}
 
 {% if shoplist_list %}
-<form action="{% url 'qsh:shoplist_list' %}" method="post">
+<form action="{% url 'qsh:shoplist_delete' %}" method="post">
 {% csrf_token %}
 {% for shoplist in shoplist_list %}
     <input type="checkbox" name="shoplists_to_delete" id="shoplist{{ forloop.counter }}" value="{{ shoplist.id }}"/>

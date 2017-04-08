@@ -1,6 +1,11 @@
 {% extends "qsh/base.html" %}
 
 {% block title %}Add many to {{ shoplist.name }}{% endblock %}
+
+{% block active-list %}<a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a>{% endblock %}
+
+{% block operation %}<p class="navbar-text">Add Many</p>{% endblock %}
+
 {% block content %}
 
 <h3>{{ selected }}</h3>

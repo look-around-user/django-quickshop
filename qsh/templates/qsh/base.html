@@ -1,12 +1,28 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>{{ request.user.first_name }} --- {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class=header>
-{% block header %}{% endblock %}
-</div>
-<div class="content">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'qsh:shoplist_list' %}"><span class="glyphicon glyphicon-user"></span> {{ request.user.first_name }}</a>
+            <li>{% block active-list %}{% endblock %}</li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="bg-info">{% block operation %}{% endblock %}</li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
 {% block content %}{% endblock %}
 </div>
 </body>

@@ -2,10 +2,16 @@
 
 {% block title %}Edit {{ shoplist.name }}{% endblock %}
 
-{% block header %}
-<a href="{% url 'qsh:shoplist_list' %}">Shoplists</a>
-<br />
-<p />
+{% block active-list %}<p class="navbar-text">{{ shoplist.name }}</p>{% endblock %}
+
+{% block operation %}
+<div class="dropdown navbar-btn">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-list"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'qsh:shoplist_add_new'  shoplist.id %}">Add New</a></li>
+        <li><a href="{% url 'qsh:shoplist_add_many' shoplist.id %}">Add Many</a></li>
+    </ul>
+</div>
 {% endblock %}
 
 {% block content %}

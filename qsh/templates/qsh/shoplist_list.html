@@ -1,25 +1,37 @@
 {% extends "qsh/base.html" %}
 
 {% block title %}All shoplists{% endblock %}
+
+{% block navbar-right-content %}
+<div class="dropdown navbar-btn">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-list"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'qsh:shoplist_create' %}">Create New</a></li>
+        <li><a href="javascript: $('#list_form').submit()" class="bg-danger text-danger">Delete selected</a></li>
+    </ul>
+</div>
+{% endblock %}
+
 {% block content %}
 
 {% if shoplist_list %}
-<form action="{% url 'qsh:shoplist_delete' %}" method="post">
+<form id="list_form" action="{% url 'qsh:shoplist_delete' %}" method="post">
 {% csrf_token %}
+<div class="list-group">
 {% for shoplist in shoplist_list %}
-    <input type="checkbox" name="shoplists_to_delete" id="shoplist{{ forloop.counter }}" value="{{ shoplist.id }}"/>
-    <label for="shoplist{{ forloop.counter }}">
-        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a>
-    </label>
-    <br />
+  <div class="list-group-item">
+    <input type="checkbox" name="shoplists_to_delete" value="{{ shoplist.id }}"/>
+    <span class="list-group-item-text">
+        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">
+            <strong>{{ shoplist.name }}</strong>
+        </a>
+    </span>
+</div>
 {% endfor %}
-<input type="submit" value="Delete selected" />
+</div>
 </form>
 {% else %}
     <p>No shoplists yet</p>
 {% endif %}
 
-<p>
-<a href="{% url 'qsh:shoplist_create' %}">Create new</a></li>
-</p>
 {% endblock %}

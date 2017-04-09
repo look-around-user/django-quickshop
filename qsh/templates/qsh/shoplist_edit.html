@@ -2,14 +2,15 @@
 
 {% block title %}Edit {{ shoplist.name }}{% endblock %}
 
-{% block active-list %}<p class="navbar-text">{{ shoplist.name }}</p>{% endblock %}
+{% block active-list %}<li><p class="navbar-text">{{ shoplist.name }}</p></li>{% endblock %}
 
-{% block operation %}
+{% block navbar-right-content %}
 <div class="dropdown navbar-btn">
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-list"></span></button>
     <ul class="dropdown-menu">
         <li><a href="{% url 'qsh:shoplist_add_new'  shoplist.id %}">Add New</a></li>
         <li><a href="{% url 'qsh:shoplist_add_many' shoplist.id %}">Add Many</a></li>
+        <li><a href="javascript: $('#list_form').submit()" class="bg-danger text-danger">Delete selected</a></li>
     </ul>
 </div>
 {% endblock %}
@@ -20,16 +21,15 @@
 <p><strong>{{ error_message }}</strong></p>
 {% endif %}
 
-<form action="{% url 'qsh:shoplist_edit' shoplist.id %}" method="post">
+<form id="list_form" action="{% url 'qsh:shoplist_edit' shoplist.id %}" method="post">
 {% csrf_token %}
+<div class="list-group">
 {% for buydetail in shoplist.buydetail_set.all %}
-    <input type="checkbox" name="buydetails_to_delete" id="buydetail{{ forloop.counter }}" value="{{ buydetail.id }}"/>
-    <label for="buydetail{{ forloop.counter }}">{{ buydetail.buyable.name }}</label><br />
+<div class="list-group-item">
+    <input type="checkbox" name="buydetails_to_delete" value="{{ buydetail.id }}"/>
+    <span class="list-group-item-text"><strong>{{ buydetail.buyable.name }}</strong></span>
+</div>
 {% endfor %}
-<input type="submit" value="Delete" />
+</div>
 </form>
-
-<a href="{% url 'qsh:shoplist_add_new'  shoplist.id %}">Add new</a>
-<a href="{% url 'qsh:shoplist_add_many' shoplist.id %}">Add many</a>
-
 {% endblock %}

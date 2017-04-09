@@ -2,9 +2,11 @@
 
 {% block title %}Add new to {{ shoplist.name }}{% endblock %}
 
-{% block active-list %}<a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a>{% endblock %}
+{% block active-list %}<li><a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a></li>{% endblock %}
 
-{% block operation %}<p class="navbar-text"><strong>Add New</strong></p>{% endblock %}
+{% block navbar-right-content %}
+<button class="btn btn-primary navbar-btn" onclick="$('#add_form').submit()">Add New</button>
+{% endblock %}
 
 {% block content %}
 
@@ -12,10 +14,9 @@
 <p><strong>{{ error_message }}</strong></p>
 {% endif %}
 
-<form method="post">
+<form id="add_form" method="post">
 {% csrf_token %}
 {{ form }}
-<input type="submit" value="Add" />
 </form>
 
 {% endblock %}

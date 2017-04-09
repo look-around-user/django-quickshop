@@ -2,9 +2,11 @@
 
 {% block title %}Add many to {{ shoplist.name }}{% endblock %}
 
-{% block active-list %}<a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a>{% endblock %}
+{% block active-list %}<li><a href="{% url 'qsh:shoplist_edit' shoplist.id %}">{{ shoplist.name }}</a></li>{% endblock %}
 
-{% block operation %}<p class="navbar-text">Add Many</p>{% endblock %}
+{% block navbar-right-content %}
+<button class="btn btn-primary navbar-btn" onclick="$('#list_form').submit()">Add Selected</button>
+{% endblock %}
 
 {% block content %}
 
@@ -14,14 +16,18 @@
 {% endif %}
 
 {% if buyables %}
-<form method="post">
+<form id="list_form" method="post">
 {% csrf_token %}
+<div class="list-group">
 {% for buyable in buyables %}
-    <input type="checkbox" name="buyables_to_add" id="buyable{{ forloop.counter }}" value="{{ buyable.id }}"/>
-    <label for="buyable{{ forloop.counter }}">{{ buyable.name }}</label><br />
+    <div class="list-group-item">
+        <input type="checkbox" name="buyables_to_add" value="{{ buyable.id }}"/>
+        <span class="list-group-item-text"><strong>{{ buyable.name }}</strong></span>
+    </div>
 {% endfor %}
-<input type="submit" value="Add selected" />
+</div>
 </form>
+
 {% else %}
     <p>No buyables for some reason!?</p>
 {% endif %}

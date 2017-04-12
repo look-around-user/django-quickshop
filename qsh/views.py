@@ -4,6 +4,8 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render_to_response
+from io import StringIO 
 
 from .models import Shoplist, Buyable, Buydetail, User
 from .forms import BuydetailForm, ShoplistForm
@@ -47,6 +49,35 @@ def shoplist_edit(request, shoplist_id):
             buydetail = Buydetail.objects.filter(pk=buydetail_id, shoplist=shoplist)
             buydetail.delete()
     return render(request, 'qsh/shoplist_edit.html', { 'shoplist': shoplist })
+
+@login_required
+def shoplist_create_modal(request):
+    if request.method == 'POST':
+        form = ShoplistForm(request.POST)
+        response = {}
+
+        if form.is_valid():
+            response["status"] = "OK"
+            # save the data, or do whatever.
+            shoplist_name = form.cleaned_data['name']
+            # TODO error message for same name
+            Shoplist.save_new(shoplist_name, request.user)
+        else:
+            response["status"] = "bad"
+            response.update(form.errors)
+
+        # now just to serialize and respond
+        s = StringIO()
+        json.dump(response, s)
+        s.seek(0)
+        return HttpResponse(s.read())
+
+    else:
+        form = ShoplistForm()
+
+    return render_to_response('qsh/shoplist_create_modal.html', {
+        'form': form,
+    })
 
 @login_required
 def shoplist_create(request):

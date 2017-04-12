@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
@@ -5,7 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render_to_response
-from io import StringIO 
+from io import StringIO
 
 from .models import Shoplist, Buyable, Buydetail, User
 from .forms import BuydetailForm, ShoplistForm
@@ -75,9 +76,7 @@ def shoplist_create_modal(request):
     else:
         form = ShoplistForm()
 
-    return render_to_response('qsh/shoplist_create_modal.html', {
-        'form': form,
-    })
+    return render_to_response('qsh/shoplist_create_modal.html', {'form': form} )
 
 @login_required
 def shoplist_create(request):

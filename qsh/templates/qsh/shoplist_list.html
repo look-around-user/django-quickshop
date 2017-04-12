@@ -12,6 +12,7 @@
 </div>
 {% endblock %}
 
+
 {% block content %}
 
 {% if shoplist_list %}
@@ -26,7 +27,7 @@
             <strong>{{ shoplist.name }}</strong>
         </a>
     </span>
-</div>
+  </div>
 {% endfor %}
 </div>
 </form>
@@ -39,89 +40,8 @@
 
 {% block in-body %}
 
+<div id="myModal" class="modal fade" role="dialog"></div>
 
-<button class='btn'>Contact!</button>
-<div id="dialog-modal">
-</div>
-
-<script>
-$(function() {
-    $('button').on('click', function() {
-
-        // first things firts, fetch the form into the dialog
-        $('#dialog-modal').load('create_modal #myform');
-
-        // initiate dialog
-        $('#dialog-modal').dialog({
-              height: 450,
-              modal: true,
-
-              // I'm using the built-in buttons, but you can use your own
-              buttons: {
-                    Send: function() {
-                        var dialog = $(this),
-                            form = $('#myform'),
-                            data = form.serialize();
-
-                    $('.off').remove(); // this is to avoid duplicates
-
-                    // run ajax post call
-                    $.ajax({
-                        url: 'qsh/create_modal',
-                        data: data,
-                        type: 'post',
-
-                        // if successful print response
-                        success: function(response) {
-                            res = $.parseJSON(response);
-
-                            // if form was successful:
-                            if (res['status'] == 'OK') {
-                                // form was successful
-                                alert('Thank you! Form has been submitted'); // say thank you
-                                dialog.dialog('close'); // close dialog
-                            }
-
-                            // if not...
-                            else if (res['status'] == 'bad') {
-                                delete res['status'] // we don't need this anymore...
-                                var errors = res; // just for simplicity
-
-                                $.each(errors, function(key, value) {
-                                    // i.e. key='subject' and value is the error message itself
-
-                                    var err = $('<span></span>', {
-                                                    'class': 'off',
-                                                    'text': value
-                                            }),
-                                        br = $('<br></br>', {
-                                            'class': 'off',
-                                        }),
-                                        input = $('#id_'+key).parent(); //find the parent div for the relevant input by key
-
-                                    // add a small break
-                                    br.appendTo(input);
-
-                                    // add the error
-                                    err.appendTo(input);
-
-                                    // add some styling
-                                    err.css('color', 'red').css('font-size', '10px');
-
-                                });
-                            }
-                        }
-
-                      });
-
-                    }
-                  }
-            });
-
-
-    });
-});
-</script>
-
+<button class='btn' onclick="$('#myModal').load('create_modal');" data-toggle="modal" data-target="#myModal">Contact!</button>
 
 {% endblock %}

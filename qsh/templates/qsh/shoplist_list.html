@@ -14,6 +14,32 @@
 
 {% block content %}
 
+{% if shoplist_list %}
+<form id="list_form" action="{% url 'qsh:shoplist_delete' %}" method="post">
+{% csrf_token %}
+<div class="list-group">
+{% for shoplist in shoplist_list %}
+  <div class="list-group-item">
+    <input type="checkbox" name="shoplists_to_delete" value="{{ shoplist.id }}"/>
+    <span class="list-group-item-text">
+        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">
+            <strong>{{ shoplist.name }}</strong>
+        </a>
+    </span>
+</div>
+{% endfor %}
+</div>
+</form>
+{% else %}
+    <p>No shoplists yet</p>
+{% endif %}
+
+{% endblock %}
+
+
+{% block in-body %}
+
+
 <button class='btn'>Contact!</button>
 <div id="dialog-modal">
 </div>
@@ -97,26 +123,5 @@ $(function() {
 });
 </script>
 
-
-
-{% if shoplist_list %}
-<form id="list_form" action="{% url 'qsh:shoplist_delete' %}" method="post">
-{% csrf_token %}
-<div class="list-group">
-{% for shoplist in shoplist_list %}
-  <div class="list-group-item">
-    <input type="checkbox" name="shoplists_to_delete" value="{{ shoplist.id }}"/>
-    <span class="list-group-item-text">
-        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">
-            <strong>{{ shoplist.name }}</strong>
-        </a>
-    </span>
-</div>
-{% endfor %}
-</div>
-</form>
-{% else %}
-    <p>No shoplists yet</p>
-{% endif %}
 
 {% endblock %}

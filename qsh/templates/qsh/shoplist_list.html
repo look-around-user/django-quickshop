@@ -14,27 +14,14 @@
 
 
 {% block content %}
-
-{% if shoplist_list %}
-<form id="list_form" action="{% url 'qsh:shoplist_delete' %}" method="post">
-{% csrf_token %}
+<form id="lists_form">
 <div class="list-group">
-{% for shoplist in shoplist_list %}
-  <div class="list-group-item">
-    <input type="checkbox" name="shoplists_to_delete" value="{{ shoplist.id }}"/>
-    <span class="list-group-item-text">
-        <a href="{% url 'qsh:shoplist_edit' shoplist.id %}">
-            <strong>{{ shoplist.name }}</strong>
-        </a>
-    </span>
+  <div class="list-group-item hidden">
+    <input type="checkbox" name="shoplists_to_delete" />
+    <span class="list-group-item-text"><a><strong>--SHOPLIST-NAME--</strong></a></span>
   </div>
-{% endfor %}
 </div>
 </form>
-{% else %}
-    <p>No shoplists yet</p>
-{% endif %}
-
 {% endblock %}
 
 
@@ -44,4 +31,6 @@
 
 <button class='btn' onclick="$('#myModal').load('create_modal');" data-toggle="modal" data-target="#myModal">Contact!</button>
 
+<script>var url_shoplist_list_all_json = "{% url 'qsh:shoplist_list_all_json' %}";</script>
+<script src="/static/qsh/dyn.js"></script>
 {% endblock %}

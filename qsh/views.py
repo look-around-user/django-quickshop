@@ -104,6 +104,14 @@ def shoplist_delete(request):
 
     return HttpResponseRedirect(reverse('qsh:shoplist_list'))
 
+from django.core import serializers
+
+@login_required
+def shoplist_list_all_json(request):
+    shoplists = Shoplist.objects.filter(user=request.user)
+    data = serializers.serialize('json', shoplists)
+    return HttpResponse(data, content_type='application/json')
+
 class ShoplistsView(LoginRequiredMixin, generic.ListView):
     model = Shoplist
     def get_queryset(self):

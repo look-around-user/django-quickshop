@@ -11,6 +11,7 @@ from io import StringIO
 from .models import Shoplist, Buyable, Buydetail, User
 from .forms import BuydetailForm, ShoplistForm
 
+
 @login_required
 def shoplist_add_new(request, shoplist_id):
     shoplist = Shoplist.get_one(shoplist_id, request.user)
@@ -22,7 +23,8 @@ def shoplist_add_new(request, shoplist_id):
             shoplist.add_buydetail(buyable, form.cleaned_data['quantity'])
             return HttpResponseRedirect(reverse('qsh:shoplist_edit', args=(shoplist.id,)))
     form = BuydetailForm()
-    return render(request, 'qsh/shoplist_add_new.html', { 'shoplist': shoplist, 'form': form })
+    return render(request, 'qsh/shoplist_add_new.html', {'shoplist': shoplist, 'form': form})
+
 
 @login_required
 def shoplist_add_many(request, shoplist_id):
@@ -36,10 +38,11 @@ def shoplist_add_many(request, shoplist_id):
 
     buyables = shoplist.get_unused_buyables()
     return render(request,
-        'qsh/shoplist_add_many.html', {
-            'shoplist': shoplist,
-            'buyables': buyables,
-            })
+                  'qsh/shoplist_add_many.html', {
+                      'shoplist': shoplist,
+                      'buyables': buyables,
+                  })
+
 
 @login_required
 def shoplist_edit(request, shoplist_id):
@@ -49,7 +52,8 @@ def shoplist_edit(request, shoplist_id):
         for buydetail_id in buydetails_to_delete:
             buydetail = Buydetail.objects.filter(pk=buydetail_id, shoplist=shoplist)
             buydetail.delete()
-    return render(request, 'qsh/shoplist_edit.html', { 'shoplist': shoplist })
+    return render(request, 'qsh/shoplist_edit.html', {'shoplist': shoplist})
+
 
 @login_required
 def shoplist_create_modal(request):
@@ -76,7 +80,8 @@ def shoplist_create_modal(request):
     else:
         form = ShoplistForm()
 
-    return render_to_response('qsh/shoplist_create_modal.html', {'form': form} )
+    return render_to_response('qsh/shoplist_create_modal.html', {'form': form})
+
 
 @login_required
 def shoplist_create(request):
@@ -89,7 +94,8 @@ def shoplist_create(request):
             return HttpResponseRedirect(reverse('qsh:shoplist_edit', args=(shoplist.id,)))
     form = ShoplistForm()
 
-    return render(request, 'qsh/shoplist_create.html', { 'form': form })
+    return render(request, 'qsh/shoplist_create.html', {'form': form})
+
 
 @login_required
 def shoplist_delete(request):
@@ -104,7 +110,9 @@ def shoplist_delete(request):
 
     return HttpResponseRedirect(reverse('qsh:shoplist_list'))
 
+
 from django.core import serializers
+
 
 @login_required
 def shoplist_list_all_json(request):
@@ -112,8 +120,10 @@ def shoplist_list_all_json(request):
     data = serializers.serialize('json', shoplists)
     return HttpResponse(data, content_type='application/json')
 
+
 class ShoplistsView(LoginRequiredMixin, generic.ListView):
     model = Shoplist
+
     def get_queryset(self):
         # TODO filter by user
         return Shoplist.objects.filter(user=self.request.user)

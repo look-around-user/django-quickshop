@@ -91,3 +91,4 @@ ENV/
 ## local DB
 *.sqlite3
 core
+.Trash*

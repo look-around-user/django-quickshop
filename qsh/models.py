@@ -4,14 +4,14 @@ from django.contrib.auth.models import User
 
 class Shoplist(models.Model):
     name = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
     @staticmethod
     def get_one(pk, user):
-        for shoplist in Shoplist.objects.filter(pk=pk, user=user):
+        for shoplist in Shoplist.objects.filter(pk=pk, owner=user):
             return shoplist
         return None
 
@@ -19,7 +19,7 @@ class Shoplist(models.Model):
     def save_new(name, user):
         shoplist = Shoplist()
         shoplist.name = name
-        shoplist.user = user
+        shoplist.owner = user
         shoplist.save()
         return shoplist
 
@@ -31,7 +31,7 @@ class Shoplist(models.Model):
         buydetail.save()
 
     def get_unused_buyables(self):
-        buyables_all = Buyable.objects.filter(user=self.user)
+        buyables_all = Buyable.objects.filter(owner=self.user)
         buydetails_in_shoplist = self.buydetail_set.all()
         buyables = []
         for buyable in buyables_all:
@@ -46,8 +46,8 @@ class Shoplist(models.Model):
 
 class Buyable(models.Model):
     name = models.CharField(max_length=50)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #last_use = models.DateField()
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    # last_use = models.DateField()
 
     def __str__(self):
         return self.name
@@ -56,13 +56,13 @@ class Buyable(models.Model):
     def save_new(name, user):
         buyable = Buyable()
         buyable.name = name
-        buyable.user = user
+        buyable.owner = user
         buyable.save()
         return buyable
 
     @staticmethod
     def fetch_or_create(name, user):
-        buyable_lookup = Buyable.objects.filter(name=name, user=user)
+        buyable_lookup = Buyable.objects.filter(name=name, owner=user)
         if buyable_lookup:
             buyable = buyable_lookup
         else:
@@ -74,7 +74,7 @@ class Buydetail(models.Model):
     shoplist = models.ForeignKey(Shoplist, on_delete=models.CASCADE)
     buyable = models.ForeignKey(Buyable, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    #note = models.CharField(max_length=50)
+    # note = models.CharField(max_length=50)
 
     def __str__(self):
         return self.buyable.name

@@ -90,7 +90,7 @@ def shoplist_create(request):
         if form.is_valid():
             shoplist_name = form.cleaned_data['name']
             # TODO error message for same name
-            Shoplist.save_new(shoplist_name, request.user)
+            shoplist = Shoplist.save_new(shoplist_name, request.user)
             return HttpResponseRedirect(reverse('qsh:shoplist_edit', args=(shoplist.id,)))
     form = ShoplistForm()
 
@@ -116,7 +116,7 @@ from django.core import serializers
 
 @login_required
 def shoplist_list_all_json(request):
-    shoplists = Shoplist.objects.filter(user=request.user)
+    shoplists = Shoplist.objects.filter(owner=request.user)
     data = serializers.serialize('json', shoplists)
     return HttpResponse(data, content_type='application/json')
 
@@ -126,4 +126,4 @@ class ShoplistsView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         # TODO filter by user
-        return Shoplist.objects.filter(user=self.request.user)
+        return Shoplist.objects.filter(owner=self.request.user)

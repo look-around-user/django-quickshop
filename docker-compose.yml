@@ -12,10 +12,18 @@ services:
         working_dir: /code
         ports:
             - "8000:8000"
-    build:
+    make-virtualenv:
         image: python-virtualenv
         command: [ "bash", "-c",
-            "if [ ! -d venv ]; then virtualenv venv && source ./venv/bin/activate && pip install -r requirements.txt; fi"
+            "if [ ! -d venv ]; then virtualenv venv; fi"
+            ]
+        volumes:
+            - .:/code
+        working_dir: /code
+    update-requirements:
+        image: python-virtualenv
+        command: [ "bash", "-c",
+            "if [ -d venv ]; then source ./venv/bin/activate && pip install -r requirements.txt; fi"
             ]
         volumes:
             - .:/code

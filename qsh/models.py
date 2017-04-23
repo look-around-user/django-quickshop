@@ -31,7 +31,7 @@ class Shoplist(models.Model):
         buydetail.save()
 
     def get_unused_buyables(self):
-        buyables_all = Buyable.objects.filter(owner=self.user)
+        buyables_all = Buyable.objects.filter(owner=self.owner)
         buydetails_in_shoplist = self.buydetail_set.all()
         buyables = []
         for buyable in buyables_all:
@@ -64,7 +64,7 @@ class Buyable(models.Model):
     def fetch_or_create(name, user):
         buyable_lookup = Buyable.objects.filter(name=name, owner=user)
         if buyable_lookup:
-            buyable = buyable_lookup
+            buyable = buyable_lookup[0]
         else:
             buyable = Buyable.save_new(name, user)
         return buyable

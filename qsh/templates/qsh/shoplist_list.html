@@ -7,14 +7,15 @@
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-list"></span></button>
     <ul class="dropdown-menu">
         <li><a href="{% url 'qsh:shoplist_create' %}">Create New</a></li>
-        <li><a href="javascript: $('#list_form').submit()" class="bg-danger text-danger">Delete selected</a></li>
+        <li><a href="javascript: $('#lists_form').submit()" class="bg-danger text-danger">Delete selected</a></li>
     </ul>
 </div>
 {% endblock %}
 
 
 {% block content %}
-<form id="lists_form">
+<form id="lists_form" method="POST" action="{% url 'qsh:shoplist_delete' %}">
+{% csrf_token %}
 <div class="list-group">
   <div class="list-group-item hidden">
     <input type="checkbox" name="shoplists_to_delete" />
